@@ -35,7 +35,7 @@ update_review_request() {
     -H "${AUTH_HEADER}" \
     -H "${API_HEADER}" \
     -X $1 \
-    -d "{\"assignees\":${reviewer}}" \
+    -d "{\"assignees\":[\"slopezju\",\"guillaumevalverde\"]}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/assignees"
 }
 
