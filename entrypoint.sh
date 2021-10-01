@@ -23,13 +23,18 @@ action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 pullre=$(jq --raw-output .pull_request "$GITHUB_EVENT_PATH")
 reviewer=$(jq --raw-output .pull_request.requested_reviewers "$GITHUB_EVENT_PATH")
-reviewerTest=$(jq --raw-output .pull_request.requested_reviewers.|map(.login) "$GITHUB_EVENT_PATH")
+reviewerTest=$(jq --raw-output .pull_request.requested_reviewers.|map(."login") "$GITHUB_EVENT_PATH")
 
 echo "debug"
 
 echo "${reviewer}"
 echo "debug2"
 
+
+echo "debug"
+
+echo "${reviewerTest}"
+echo "debug2"
 update_review_request() {
   curl -sSL \
     -H "Content-Type: application/json" \
