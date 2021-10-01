@@ -25,8 +25,9 @@ pullre=$(jq --raw-output .pull_request "$GITHUB_EVENT_PATH")
 reviewer=$(jq --raw-output .pull_request.requested_reviewers "$GITHUB_EVENT_PATH")
 
 echo "debug"
-echo "${pullre}"
+
 echo "${reviewer}"
+echo "debug2"
 
 update_review_request() {
   curl -sSL \
