@@ -21,7 +21,12 @@ AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-reviewer=$(jq --raw-output .requested_reviewers.login "$GITHUB_EVENT_PATH")
+pullre = $(jq --raw-output .pull_request.requested "$GITHUB_EVENT_PATH")
+reviewer=$(jq --raw-output .pull_request.requested_reviewers.login "$GITHUB_EVENT_PATH")
+
+echo "debug"
+echo "${pullre}"
+echo "${reviewer}"
 
 update_review_request() {
   curl -sSL \
