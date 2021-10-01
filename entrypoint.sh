@@ -30,7 +30,7 @@ update_review_request() {
     -H "${API_HEADER}" \
     -X $1 \
     -d "{\"assignees\":[\"${reviewer}\"]}" \
-    "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${number}/assignees"
+    "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/assignees"
 }
 
 if [[ "$action" == "review_requested" ]]; then
