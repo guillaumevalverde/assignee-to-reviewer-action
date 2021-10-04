@@ -42,7 +42,7 @@ update_review_request() {
     -H "${AUTH_HEADER}" \
     -H "${API_HEADER}" \
     -X $1 \
-    -d "{\"assignees\":${listReviewerWithoutSpace2}}" \
+    -d "{\"assignees\":"${listReviewerWithoutSpace2}"}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/assignees"
 }
 #    -d "{\"assignees\":[\"slopezju\",\"drevlav\"]}" \
