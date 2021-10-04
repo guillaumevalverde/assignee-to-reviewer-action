@@ -22,10 +22,12 @@ AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 reviewers=$(jq --raw-output '.pull_request.requested_reviewers|map(."login")' "$GITHUB_EVENT_PATH")
+assignee=$(jq --raw-output .assignee.login "$GITHUB_EVENT_PATH")
 list_reviewers=${reviewers//\"/\\\"}
-listReviewerWithoutSpace = `echo $list_reviewers | tr -d '[:space:]'`
+listReviewerWithoutSpace = `echo ${list_reviewers} | tr -d '[:space:]'`
                             
 echo "set as reviewer: "
+echo "${assignee}"
 echo "${list_reviewers}"
 echo ${listReviewerWithoutSpace}
 echo $list_reviewers
