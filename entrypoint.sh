@@ -22,9 +22,11 @@ AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 reviewers=$(jq --raw-output '.pull_request.requested_reviewers|map(."login")' "$GITHUB_EVENT_PATH")
+list_reviewers=`echo "${reviewers//\"/\\\"}" | tr -d '[:space:]'` 
                             
 echo "set as reviewer: "
 echo "${reviewers//\"/\\\"}"
+echo $list_reviewers
 
 update_review_request() {
   curl -sSL \
@@ -32,7 +34,7 @@ update_review_request() {
     -H "${AUTH_HEADER}" \
     -H "${API_HEADER}" \
     -X $1 \
-    -d "{\"assignees\":${reviewers//\"/\\\"}" \
+    -d "{\"assignees\":${list_reviewers}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/assignees"
 }
 
