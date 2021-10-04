@@ -24,7 +24,7 @@ number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 pullre=$(jq --raw-output . "$GITHUB_EVENT_PATH")
 reviewer=$(jq --raw-output .pull_request.requested_reviewers "$GITHUB_EVENT_PATH")
 
-reviewerTest=$(jq --raw-output .pull_request.requested_reviewers|map(."login") "$GITHUB_EVENT_PATH")
+reviewerTest=$(jq --raw-output '.pull_request.requested_reviewers|map(."login")' "$GITHUB_EVENT_PATH")
 #reviewerTest=$(jq --raw-output .pull_request.requested_reviewers.|map(."login") "$GITHUB_EVENT_PATH")
 
 echo "debug"
