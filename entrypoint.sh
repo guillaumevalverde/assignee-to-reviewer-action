@@ -22,19 +22,17 @@ AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 reviewers=$(jq --raw-output '.pull_request.requested_reviewers|map(."login")' "$GITHUB_EVENT_PATH")
-assignee=$(jq --raw-output .assignee.login "$GITHUB_EVENT_PATH")
-list_reviewers=${reviewers//\"/\\\"}
-listReviewerWithoutSpace=`echo "${list_reviewers}" | tr -d '[:space:]'`
-listReviewerWithoutSpace2=`echo ${reviewers} | tr -d '[:space:]'`
-#listReviewerWithoutSpace = `echo ${list_reviewers} | tr -d '[:space:]'`
+assignees=$(jq --raw-output '.pull_request.assignees|map(."login")' "$GITHUB_EVENT_PATH")
+
+listReviewerWithoutSpace=`echo ${reviewers} | tr -d '[:space:]'`
+listAssigneesWithoutSpace=`echo ${assignees} | tr -d '[:space:]'`
                             
 echo "set as reviewer: "
-echo "${assignee}"
+
 echo "${list_reviewers}"
 echo "${listReviewerWithoutSpace}"
-echo "${listReviewerWithoutSpace2}"
-#echo ${listReviewerWithoutSpace}
-#echo $list_reviewers
+echo "${listAssigneesWithoutSpace}"
+
 
 update_review_request() {
   curl -sSL \
@@ -42,16 +40,9 @@ update_review_request() {
     -H "${AUTH_HEADER}" \
     -H "${API_HEADER}" \
     -X $1 \
-    -d "{\"assignees\":${listReviewerWithoutSpace2}}" \
+    -d "{\"assignees\":$2}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/assignees"
 }
-#    -d "{\"assignees\":[\"slopezju\",\"drevlav\"]}" \
 
-if [[ "$action" == "review_requested" ]]; then
-  update_review_request 'POST'
-elif [[ "$action" == "review_request_removed" ]]; then
-  update_review_request 'DELETE'
-else
-  echo "Ignoring action ${action}"
-  exit 0
-fi
+update_review_request 'DELETE' ${listAssigneesWithoutSpace}
+update_review_request 'POST' ${listReviewerWithoutSpace}
