@@ -22,10 +22,11 @@ AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 reviewers=$(jq --raw-output '.pull_request.requested_reviewers|map(."login")' "$GITHUB_EVENT_PATH")
-reviewersWithQuote=reviewers.replace("\"", "\\\"")
-
+                            
 echo "set as reviewer: "
 echo "${reviewers}"
+reviewersWithQuote=reviewers.replace('\"', '\\\"')
+
 echo "${reviewersWithQuote}"
 
 update_review_request() {
