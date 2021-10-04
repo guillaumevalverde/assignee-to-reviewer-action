@@ -29,12 +29,6 @@ reviewerTest=$(jq --raw-output '.pull_request.requested_reviewers|map(."login")'
 
 echo "debug"
 
-echo "${pullre}"
-echo "debug2"
-
-
-echo "debug"
-
 echo "${reviewerTest}"
 echo "debug2"
 update_review_request() {
