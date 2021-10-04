@@ -21,23 +21,18 @@ AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-pullre=$(jq --raw-output . "$GITHUB_EVENT_PATH")
-reviewer=$(jq --raw-output .pull_request.requested_reviewers "$GITHUB_EVENT_PATH")
+reviewers=$(jq --raw-output '.pull_request.requested_reviewers|map(."login")' "$GITHUB_EVENT_PATH")
 
-reviewerTest=$(jq --raw-output '.pull_request.requested_reviewers|map(."login")' "$GITHUB_EVENT_PATH")
-#reviewerTest=$(jq --raw-output .pull_request.requested_reviewers.|map(."login") "$GITHUB_EVENT_PATH")
+echo "set as reviewer: "
+echo "${reviewers}"
 
-echo "debug"
-
-echo "${reviewerTest}"
-echo "debug2"
 update_review_request() {
   curl -sSL \
     -H "Content-Type: application/json" \
     -H "${AUTH_HEADER}" \
     -H "${API_HEADER}" \
     -X $1 \
-    -d "{\"assignees\":[\"slopezju\",\"guillaumevalverde\"]}" \
+    -d "{\"assignees\": ${reviewwers}}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/assignees"
 }
 
