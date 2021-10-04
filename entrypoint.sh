@@ -27,12 +27,11 @@ assignees=$(jq --raw-output '.pull_request.assignees|map(."login")' "$GITHUB_EVE
 listReviewerWithoutSpace=`echo ${reviewers} | tr -d '[:space:]'`
 listAssigneesWithoutSpace=`echo ${assignees} | tr -d '[:space:]'`
                             
-echo "set as reviewer: "
 
-echo "${list_reviewers}"
-echo "${listReviewerWithoutSpace}"
+echo "remove first: "
 echo "${listAssigneesWithoutSpace}"
-
+echo "then assign: "
+echo "${listReviewerWithoutSpace}"
 
 update_review_request() {
   curl -sSL \
